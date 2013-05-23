@@ -30,14 +30,22 @@ describe PlayerScoreCard do
 end
   
 describe OutputScores do
-  let(:csv_file) { '../erick.csv' }
-  let(:player) { PlayerScoreCard.new(csv_file) }
+  let(:player) { PlayerScoreCard.new('../jasonz.csv') }
   let(:player_scorecard_array) { player.create_scorecard } 
-  let(:player_score_card) { PlayerScoreCard.new(csv_file).create_scorecard }
+  let(:player_score_card) { PlayerScoreCard.new('../jasonz.csv').create_scorecard }
+  let(:hole_layout) { HoleLayout.new('../course_layout.csv') }
+  let(:output_scorecard) { OutputScores.new(player_score_card, hole_layout) }
 
-  it "prints the player's name" do 
-    output_scorecard = OutputScores.new(player_score_card)
+  it "gets the player's name" do 
     players_name = output_scorecard.get_players_names
     expect(players_name).to eql("#{player_scorecard_array[19]} #{player_scorecard_array[18]}")
   end
+
+  it "outputs the players hole by hole scorecard" do
+    puts player_score_card
+    expect(output_scorecard.scorecard_output).to eql("Hole 18: #{player_score_card.last.first} - #{}")
+  end
+
+
+
 end
