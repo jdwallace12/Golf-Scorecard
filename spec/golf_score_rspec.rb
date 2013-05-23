@@ -38,14 +38,25 @@ describe OutputScores do
 
   it "gets the player's name" do 
     players_name = output_scorecard.get_players_names
-    expect(players_name).to eql("#{player_scorecard_array[19]} #{player_scorecard_array[18]}")
+    expect(players_name).to eql("#{player_scorecard_array[19].last} #{player_scorecard_array[18].last}")
   end
 
   it "outputs the players hole by hole scorecard" do
-    puts player_score_card
     expect(output_scorecard.scorecard_output).to eql("Hole 18: #{player_score_card.last.first} - #{}")
   end
 
+  it "adds all the strokes into the final score" do
+    total = player_score_card.flatten
+    total.pop(2)
+    total_score = 0
+    total.each do |sum|
+      total_score = total_score + sum.to_i
+    end
 
+    expect(output_scorecard.total_scores).to eql(total_score)
+  end
 
+  it "displays number of strokes in relation to par" do
+    expect(output_scorecard.from_par).to eql(output_scorecard.total_scores - 72)
+  end
 end

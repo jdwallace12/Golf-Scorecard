@@ -1,4 +1,5 @@
 require 'csv'
+require 'pry'
 
 class HoleLayout
 
@@ -25,10 +26,6 @@ end
 
 
 
-
-
-
-
 class OutputScores
 
   def initialize(player_score_card, hole_layout)
@@ -39,19 +36,34 @@ class OutputScores
   def get_players_names
     first_name = @player_score_card.pop
     last_name = @player_score_card.pop
-    "#{first_name} #{last_name}"
+    "#{first_name[0]} #{last_name[0]}"
   end
 
   def scorecard_output
     output = ""
-    @player_score_card.pop(2)
+    puts self.get_players_names
     @player_score_card.each_with_index do |hole_score, index|
       hole_number = index + 1
       output = "Hole #{(hole_number)}: #{hole_score.first} - #{}"
       puts "Hole #{(hole_number)}: #{hole_score.first} - #{}"
     end
+    puts "\n\nTotal score: #{self.total_scores}"
+    puts self.from_par
 
     output
+  end
+
+  def total_scores
+    total_score = 0
+    card = @player_score_card.flatten
+    card.slice(0..17).each do |sum|
+      total_score = total_score + sum.to_i
+    end
+    total_score
+  end
+
+  def from_par
+    self.total_scores - 72
   end
 end
 
