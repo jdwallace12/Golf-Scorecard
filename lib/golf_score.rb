@@ -34,15 +34,15 @@ class OutputScores
   end
 
   def get_players_names
-    first_name = @player_score_card.pop
-    last_name = @player_score_card.pop
+    first_name = @player_score_card.slice(19)
+    last_name = @player_score_card.slice(18)
     "#{first_name[0]} #{last_name[0]}"
   end
 
   def scorecard_output
     output = ""
     puts self.get_players_names
-    @player_score_card.each_with_index do |hole_score, index|
+    @player_score_card.slice(0..17).each_with_index do |hole_score, index|
       hole_number = index + 1
       output = "Hole #{(hole_number)}: #{hole_score.first} - #{}"
       puts "Hole #{(hole_number)}: #{hole_score.first} - #{}"
@@ -59,11 +59,30 @@ class OutputScores
     card.slice(0..17).each do |sum|
       total_score = total_score + sum.to_i
     end
+
     total_score
   end
 
+  def par_for_the_course
+    par = 0
+    course_par = @hole_layout.flatten
+    course_par.each do |sum|
+      par = par + sum.to_i
+    end
+
+    par
+  end
+
+
   def from_par
-    self.total_scores - 72
+    to_par = self.total_scores - self.par_for_the_course
+    if to_par == 0
+      return "even par"
+    elsif to_par > 0
+      return "#{to_par} over par"
+    else
+      return "#{to_par.abs} under par"
+    end
   end
 end
 

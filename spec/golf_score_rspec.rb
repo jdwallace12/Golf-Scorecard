@@ -30,33 +30,46 @@ describe PlayerScoreCard do
 end
   
 describe OutputScores do
-  let(:player) { PlayerScoreCard.new('../jasonz.csv') }
-  let(:player_scorecard_array) { player.create_scorecard } 
-  let(:player_score_card) { PlayerScoreCard.new('../jasonz.csv').create_scorecard }
-  let(:hole_layout) { HoleLayout.new('../course_layout.csv') }
+  # let(:player) { PlayerScoreCard.new('../jasonz.csv') }
+  # let(:player_scorecard_array) { player.create_scorecard } 
+  let(:player_score_card) { PlayerScoreCard.new('../danp.csv').create_scorecard }
+  let(:hole_layout) { HoleLayout.new('../course_layout.csv').create_course }
   let(:output_scorecard) { OutputScores.new(player_score_card, hole_layout) }
 
   it "gets the player's name" do 
     players_name = output_scorecard.get_players_names
-    expect(players_name).to eql("#{player_scorecard_array[19].last} #{player_scorecard_array[18].last}")
+    expect(players_name).to eql("#{player_score_card[19].last} #{player_score_card[18].last}")
   end
 
   it "outputs the players hole by hole scorecard" do
-    expect(output_scorecard.scorecard_output).to eql("Hole 18: #{player_score_card.last.first} - #{}")
+    expect(output_scorecard.scorecard_output).to eql("Hole 18: #{player_score_card[17].last} - #{}")
   end
 
   it "adds all the strokes into the final score" do
-    total = player_score_card.flatten
-    total.pop(2)
+    total = player_score_card.flatten.slice(0..17)
     total_score = 0
     total.each do |sum|
       total_score = total_score + sum.to_i
     end
-
     expect(output_scorecard.total_scores).to eql(total_score)
   end
 
+  it "determines par for the course" do
+    par = 0
+    course_par = hole_layout.flatten
+    course_par.each do |sum|
+      par = par + sum.to_i
+    end
+    expect(output_scorecard.par_for_the_course).to eql(par)
+  end
+
   it "displays number of strokes in relation to par" do
-    expect(output_scorecard.from_par).to eql(output_scorecard.total_scores - 72)
+    if output_scorecard.total_scores - 72 == 0
+      expect(output_scorecard.from_par).to eql("even par")
+    elsif output_scorecard.total_scores - 72 > 0
+      expect(output_scorecard.from_par).to eql("#{output_scorecard.total_scores - 72} over par")
+    else
+      expect(output_scorecard.from_par).to eql("#{(output_scorecard.total_scores - 72).abs} under par")
+    end
   end
 end
