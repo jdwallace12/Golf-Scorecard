@@ -41,8 +41,27 @@ describe OutputScores do
     expect(players_name).to eql("#{player_score_card[19].last} #{player_score_card[18].last}")
   end
 
-  it "outputs the players hole by hole scorecard" do
-    expect(output_scorecard.scorecard_output).to eql("Hole 18: #{player_score_card[17].last} - #{}")
+  it "outputs the players hole by hole score with correct term" do
+    hole_by_hole_par = hole_layout[17].last.to_i - player_score_card[17].last.to_i
+    if hole_by_hole_par == -2 && @hole_layout[17].last.to_i == 3
+      hole_by_hole_par == "Ace"
+    elsif hole_by_hole_par == -2
+      hole_by_hole_par = "Eagle"
+    elsif hole_by_hole_par == -1
+      hole_by_hole_par = "Birdie"
+    elsif hole_by_hole_par == 0
+      hole_by_hole_par = "Par"
+    elsif hole_by_hole_par == 1
+      hole_by_hole_par = "Bogie"
+    elsif hole_by_hole_par == 2
+      hole_by_hole_par = "Double Bogie"
+    elsif hole_by_hole_par == 3
+      hole_by_hole_par = "Triple Bogie"
+    else
+      return hole_by_hole_par.to_s 
+    end
+      
+    expect(output_scorecard.scorecard_output).to eql("Hole 18: #{player_score_card[17].last} - #{hole_by_hole_par}")
   end
 
   it "adds all the strokes into the final score" do
