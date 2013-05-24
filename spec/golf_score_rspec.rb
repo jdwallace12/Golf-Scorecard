@@ -30,8 +30,6 @@ describe PlayerScoreCard do
 end
   
 describe OutputScores do
-  # let(:player) { PlayerScoreCard.new('../jasonz.csv') }
-  # let(:player_scorecard_array) { player.create_scorecard } 
   let(:player_score_card) { PlayerScoreCard.new('jasonz.csv').create_scorecard }
   let(:hole_layout) { HoleLayout.new('course_layout.csv').create_course }
   let(:output_scorecard) { OutputScores.new(player_score_card, hole_layout) }
