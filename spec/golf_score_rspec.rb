@@ -4,7 +4,7 @@ require 'csv'
 require_relative '../lib/golf_score'
 
 describe HoleLayout  do
-  let(:csv_file) { '../course_layout.csv' }
+  let(:csv_file) { 'course_layout.csv' }
   let(:course_holes) { HoleLayout.new(csv_file) }
   let(:course_array) { course_holes.create_course } 
 
@@ -17,7 +17,7 @@ describe HoleLayout  do
 end
 
 describe PlayerScoreCard do
-  let(:csv_file) { '../erick.csv' }
+  let(:csv_file) { 'jasonz.csv' }
   let(:player) { PlayerScoreCard.new(csv_file) }
   let(:player_scorecard_array) { player.create_scorecard } 
 
@@ -32,8 +32,8 @@ end
 describe OutputScores do
   # let(:player) { PlayerScoreCard.new('../jasonz.csv') }
   # let(:player_scorecard_array) { player.create_scorecard } 
-  let(:player_score_card) { PlayerScoreCard.new('../danp.csv').create_scorecard }
-  let(:hole_layout) { HoleLayout.new('../course_layout.csv').create_course }
+  let(:player_score_card) { PlayerScoreCard.new('jasonz.csv').create_scorecard }
+  let(:hole_layout) { HoleLayout.new('course_layout.csv').create_course }
   let(:output_scorecard) { OutputScores.new(player_score_card, hole_layout) }
 
   it "gets the player's name" do 
@@ -42,7 +42,7 @@ describe OutputScores do
   end
 
   it "outputs the players hole by hole score with correct term" do
-    hole_by_hole_par = hole_layout[17].last.to_i - player_score_card[17].last.to_i
+    hole_by_hole_par = player_score_card[17].last.to_i - hole_layout[17].last.to_i
     if hole_by_hole_par == -2 && @hole_layout[17].last.to_i == 3
       hole_by_hole_par == "Ace"
     elsif hole_by_hole_par == -2
@@ -59,8 +59,7 @@ describe OutputScores do
       hole_by_hole_par = "Triple Bogie"
     else
       return hole_by_hole_par.to_s 
-    end
-      
+    end 
     expect(output_scorecard.scorecard_output).to eql("Hole 18: #{player_score_card[17].last} - #{hole_by_hole_par}")
   end
 

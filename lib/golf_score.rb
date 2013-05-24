@@ -42,10 +42,31 @@ class OutputScores
   def scorecard_output
     output = ""
     puts self.get_players_names
+    hole_layout_index_count = 0
     @player_score_card.slice(0..17).each_with_index do |hole_score, index|
+      each_hole_par = @hole_layout[hole_layout_index_count].first.to_i
+      hole_by_hole_par =  hole_score.first.to_i - each_hole_par
+      if hole_by_hole_par == -2 && @hole_layout[hole_layout_index_count] == 3
+        hole_by_hole_par == "Ace"
+      elsif hole_by_hole_par == -2
+        hole_by_hole_par = "Eagle"
+      elsif hole_by_hole_par == -1
+        hole_by_hole_par = "Birdie"
+      elsif hole_by_hole_par == 0
+        hole_by_hole_par = "Par"
+      elsif hole_by_hole_par == 1
+        hole_by_hole_par = "Bogie"
+      elsif hole_by_hole_par == 2
+        hole_by_hole_par = "Double Bogie"
+      elsif hole_by_hole_par == 3
+        hole_by_hole_par = "Triple Bogie"
+      else
+        return hole_by_hole_par.to_s 
+      end
+      hole_layout_index_count += 1
       hole_number = index + 1
-      output = "Hole #{(hole_number)}: #{hole_score.first} - #{}"
-      puts "Hole #{(hole_number)}: #{hole_score.first} - #{}"
+      output = "Hole #{(hole_number)}: #{hole_score.first} - #{hole_by_hole_par}"
+      puts "Hole #{(hole_number)}: #{hole_score.first} - #{hole_by_hole_par}"
     end
     puts "\n\nTotal score: #{self.total_scores}"
     puts self.from_par
@@ -86,3 +107,7 @@ class OutputScores
   end
 end
 
+course = HoleLayout.new('course_layout.csv').create_course
+score_card = PlayerScoreCard.new('jasonz.csv').create_scorecard
+printed_scorecard = OutputScores.new(score_card, course)
+printed_scorecard.scorecard_output
